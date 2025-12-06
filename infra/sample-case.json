@@ -1,0 +1,54 @@
+{
+  "tenantName": "Jane Tenant",
+  "propertyAddress": "123 Main St, Unit 4B",
+  "stateCode": "CA",
+  "scenario": "PARTIAL_REFUND",
+  "moveOutDate": "2025-03-01",
+  "letterSendDate": "2025-03-18",
+  "depositAmount": 2500,
+  "deductions": [
+    {
+      "id": "ded-1",
+      "description": "Hole in bedroom drywall",
+      "amount": 150,
+      "category": "DAMAGE"
+    },
+    {
+      "id": "ded-2",
+      "description": "Professional carpet cleaning for pet odor in living room",
+      "amount": 220,
+      "category": "CLEANING"
+    }
+  ],
+  "risk": {
+    "level": "MEDIUM",
+    "flags": [
+      {
+        "code": "ON_TIME_LETTER",
+        "message": "Your letter appears to be within the statutory deadline for this state, assuming the move-out date and send date are accurate.",
+        "severity": "INFO"
+      },
+      {
+        "code": "CLEANING_DISPUTE_RISK",
+        "message": "Cleaning charge “Professional carpet cleaning for pet odor in living room” is commonly disputed. Make sure you have move-in/move-out photos.",
+        "severity": "WARN"
+      }
+    ]
+  },
+  "evidenceIndex": [
+    {
+      "id": "photo-1",
+      "deductionId": "ded-1",
+      "type": "PHOTO",
+      "url": "https://example.com/photos/hole-bedroom.jpg",
+      "label": "Hole in bedroom drywall"
+    },
+    {
+      "id": "receipt-1",
+      "deductionId": "ded-2",
+      "type": "RECEIPT",
+      "url": "https://example.com/receipts/carpet-cleaning.pdf",
+      "label": "Carpet cleaning invoice #123"
+    }
+  ]
+}
