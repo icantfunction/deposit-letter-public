@@ -51,9 +51,9 @@
 ```mermaid
 flowchart LR
   User[Browser (Amplify)] -->|HTTPS| APIGW[API Gateway<br/>CORS allowlist]
-  APIGW -->|Lambda proxy| Lambdas[(Lambda Functions)]
-  Lambdas --> Dynamo[CaseFiles (DynamoDB)]
-  Lambdas --> S3[Evidence (S3, private)]
+  APIGW -->|Lambda proxy| Lambdas[Lambda Functions]
+  Lambdas --> Dynamo[(CaseFiles DynamoDB)]
+  Lambdas --> S3[(Evidence S3 private)]
   Lambdas --> Stripe[Stripe API]
   Stripe -->|events| EB[EventBridge]
   EB --> Lambdas
