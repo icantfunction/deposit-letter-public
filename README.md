@@ -17,9 +17,9 @@ Business stakeholders, landlords, and security reviewers. Plain language, no AI 
 ```mermaid
 flowchart LR
   User[Browser (Amplify)] -->|HTTPS| APIGW[API Gateway<br/>CORS allowlist]
-  APIGW -->|Lambda proxy| Lambdas[(Lambda Functions)]
-  Lambdas --> Dynamo[CaseFiles (DynamoDB)]
-  Lambdas --> S3[Evidence (S3, private)]
+  APIGW -->|Lambda proxy| Lambdas[Lambda Functions]
+  Lambdas --> Dynamo[(CaseFiles<br/>DynamoDB)]
+  Lambdas --> S3[(Evidence<br/>S3 private)]
   Lambdas --> Stripe[Stripe API]
   Stripe -->|events| EB[EventBridge]
   EB --> Lambdas
