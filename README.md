@@ -1,5 +1,7 @@
 # Deposit Letter App - DevOps Overview
 
+![Build Status](https://github.com/icantfunction/deposit-letter-public/actions/workflows/ci.yml/badge.svg)
+
 **What it does**  
 Helps landlords and property managers generate security-deposit letters and evidence packets. Users enter case data, pay $2 via Stripe, and download a court-ready packet. Evidence is stored privately in S3.
 
