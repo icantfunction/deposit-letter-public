@@ -16,7 +16,7 @@ Business stakeholders, landlords, and security reviewers. Plain language, no AI 
 ## Diagram (Mermaid)
 ```mermaid
 flowchart LR
-  User[Browser (Amplify)] -->|HTTPS| APIGW[API Gateway<br/>CORS allowlist]
+  User[Browser Amplify] -->|HTTPS| APIGW[API Gateway<br/>CORS allowlist]
   APIGW -->|Lambda proxy| Lambdas[Lambda Functions]
   Lambdas --> Dynamo[(CaseFiles DynamoDB)]
   Lambdas --> S3[(Evidence S3 private)]
