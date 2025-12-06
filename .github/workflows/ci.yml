@@ -1,0 +1,70 @@
+﻿name: Production Quality Gate
+
+# Trigger on Pull Requests (to block bad code) and Pushes to main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # JOB 1: Code Quality (Linting & Unit Tests)
+  # Runs parallel checks for both 'web' (Frontend) and 'infra' (Backend)
+  code-quality:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: [web, infra]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: './${{ matrix.directory }}/package-lock.json'
+
+      - name: Install Dependencies
+        working-directory: ./${{ matrix.directory }}
+        run: npm ci
+
+      - name: Linting
+        # Ensures code follows style guides (e.g., ESLint)
+        working-directory: ./${{ matrix.directory }}
+        run: npm run lint --if-present
+
+      - name: Unit Tests
+        # Runs your Jest/Vitest suites
+        working-directory: ./${{ matrix.directory }}
+        run: npm run test --if-present
+
+      - name: Dependency Security Audit
+        # Fails if high-severity vulnerabilities are found in npm packages
+        working-directory: ./${{ matrix.directory }}
+        run: npm audit --audit-level=high
+
+  # JOB 2: Infrastructure Security Scanning (The "Expert" Touch)
+  # Scans your CDK code for AWS misconfigurations before they are deployed
+  infra-security:
+    name: IaC Security Scan (Checkov)
+    runs-on: ubuntu-latest
+    needs: code-quality # Only run if code quality passes
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Run Checkov Scan
+        # Scans the 'infra' folder. 
+        # --soft-fail: Remove this flag to BLOCK the build on security errors (Recommended for Prod)
+        run: checkov -d infra/ --framework cloudformation --soft-fail
