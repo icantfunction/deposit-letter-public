@@ -85,6 +85,22 @@ function createEmptyEvidence(): EvidenceFormItem {
   };
 }
 
+function getErrorMessage(err: unknown, fallback: string): string {
+  if (err instanceof Error && err.message) {
+    return err.message;
+  }
+  if (typeof err === 'string' && err) {
+    return err;
+  }
+  if (err && typeof err === 'object' && 'message' in err) {
+    const message = (err as { message?: unknown }).message;
+    if (typeof message === 'string' && message) {
+      return message;
+    }
+  }
+  return fallback;
+}
+
 interface PaymentFormProps {
   onPaid: () => Promise<void> | void;
 }
@@ -275,7 +291,7 @@ export default function HomePage() {
         paymentStatus
       );
     }
-  }, [paymentStatus, savedCaseId]);
+  }, [paymentStatus, savedCaseId, savedCaseToken]);
 
   useEffect(() => {
     if (paymentStatus === 'PAID') {
@@ -384,11 +400,12 @@ export default function HomePage() {
         uploadStatus: 'UPLOADED',
         s3Key: key,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
+      const message = getErrorMessage(err, 'Upload failed.');
       updateEvidence(item.id, {
         uploadStatus: 'ERROR',
-        error: err?.message || 'Upload failed.',
+        error: message,
       });
     }
   }
@@ -421,11 +438,13 @@ export default function HomePage() {
         const { url } = await getDownloadUrl(key, saved.caseSecret);
         window.open(url, '_blank', 'noopener,noreferrer');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       setSaveError(
-        err?.message ||
+        getErrorMessage(
+          err,
           'Generating the packet failed. Please try again or contact support.'
+        )
       );
     } finally {
       setIsGeneratingPacket(false);
@@ -488,10 +507,10 @@ export default function HomePage() {
       setSavedCaseToken(res.caseSecret);
       setCaseSavedMessage('Case saved successfully.');
       return { caseId: res.caseId, caseSecret: res.caseSecret };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       setSaveError(
-        err?.message || 'Something went wrong while saving the case.'
+        getErrorMessage(err, 'Something went wrong while saving the case.')
       );
       return null;
     }
@@ -519,10 +538,10 @@ export default function HomePage() {
       setSavedCaseId(saved.caseId);
       setSavedCaseToken(saved.caseSecret);
       setHasStartedCheckout(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       setPaymentError(
-        err?.message || 'Failed to start checkout. Please try again.'
+        getErrorMessage(err, 'Failed to start checkout. Please try again.')
       );
     } finally {
       setIsStartingCheckout(false);

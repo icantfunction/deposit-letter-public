@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { generatePacket, getDownloadUrl } from '@/lib/api';
 
@@ -42,10 +43,16 @@ function SuccessContent() {
           setDownloadUrl(url);
           setStatus('done');
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err);
         if (!cancelled) {
-          setError(err?.message || 'Something went wrong');
+          const message =
+            err instanceof Error
+              ? err.message
+              : typeof err === 'string'
+              ? err
+              : 'Something went wrong';
+          setError(message);
           setStatus('error');
         }
       }
@@ -78,12 +85,12 @@ function SuccessContent() {
             >
               Download tenant letter PDF
             </a>
-            <a
+            <Link
               href="/"
               className="inline-flex items-center justify-center rounded-md bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-50 hover:bg-slate-700 transition"
             >
               Back to the app
-            </a>
+            </Link>
           </div>
         )}
 
@@ -92,12 +99,12 @@ function SuccessContent() {
             <p className="text-sm text-red-400">
               {error || 'There was a problem preparing your packet.'}
             </p>
-            <a
+            <Link
               href="/"
               className="inline-flex items-center justify-center rounded-md bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-50 hover:bg-slate-700 transition"
             >
               Return to the app
-            </a>
+            </Link>
           </div>
         )}
       </div>
