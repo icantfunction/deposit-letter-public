@@ -1,5 +1,7 @@
 # Deposit Letter App - DevOps Overview
 
+![Build Status](https://github.com/icantfunction/deposit-letter-public/actions/workflows/ci.yml/badge.svg)
+
 **What it does**  
 Helps landlords and property managers generate security-deposit letters and evidence packets. Users enter case data, pay $2 via Stripe, and download a court-ready packet. Evidence is stored privately in S3.
 
@@ -16,10 +18,10 @@ Business stakeholders, landlords, and security reviewers. Plain language, no AI 
 ## Diagram (Mermaid)
 ```mermaid
 flowchart LR
-  User[Browser (Amplify)] -->|HTTPS| APIGW[API Gateway<br/>CORS allowlist]
-  APIGW -->|Lambda proxy| Lambdas[(Lambda Functions)]
-  Lambdas --> Dynamo[CaseFiles (DynamoDB)]
-  Lambdas --> S3[Evidence (S3, private)]
+  User[Browser Amplify] -->|HTTPS| APIGW[API Gateway<br/>CORS allowlist]
+  APIGW -->|Lambda proxy| Lambdas[Lambda Functions]
+  Lambdas --> Dynamo[(CaseFiles DynamoDB)]
+  Lambdas --> S3[(Evidence S3 private)]
   Lambdas --> Stripe[Stripe API]
   Stripe -->|events| EB[EventBridge]
   EB --> Lambdas
