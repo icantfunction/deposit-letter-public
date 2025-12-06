@@ -274,6 +274,7 @@ export default function HomePage() {
   useEffect(() => {
     if (!savedCaseId) return;
     void refreshCaseStatus(savedCaseId, savedCaseToken);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedCaseId, savedCaseToken]);
 
   useEffect(() => {
